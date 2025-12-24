@@ -1,60 +1,114 @@
-#include <iostream>
+#include <iostream>#include <iostream>
 #include "tubes.h"
+
 using namespace std;
 
 int main() {
     ListProgram L;
     adrProgram P;
-    adrPendonor D;
+    string idProgram, tanggal, lokasi, jenis;
+    string nama, gol;
+    bool status;
+    int pilihan;
 
-    // ===============================
-    // Inisialisasi List
-    // ===============================
     createListProgram(L);
 
-    cout << "=== SISTEM MANAJEMEN DONOR DARAH ===" << endl;
+    do {
+        cout << endl;
+        cout << "===== SISTEM MANAJEMEN DONOR DARAH =====" << endl;
+        cout << "1. Tambah Program Donor" << endl;
+        cout << "2. Tambah Pendonor ke Program" << endl;
+        cout << "3. Tampilkan Pendonor Berdasarkan Program" << endl;
+        cout << "4. Tampilkan Semua Program dan Pendonornya" << endl;
+        cout << "5. Hapus Pendonor dari Program" << endl;
+        cout << "6. Hapus Program Donor" << endl;
+        cout << "7. Program dengan Pendonor Terbanyak" << endl;
+        cout << "0. Keluar" << endl;
+        cout << "Pilih menu: ";
+        cin >> pilihan;
 
-    // ===============================
-    // Tambah Program Donor
-    // ===============================
-    P = createElmProgram("PD001", "2025-06-10", "Bandung", "Darah Penuh");
-    addProgramFirst(L, P);
+        if (pilihan == 1) {
+            cout << "ID Program   : ";
+            cin >> idProgram;
+            cout << "Tanggal      : ";
+            cin >> tanggal;
+            cout << "Lokasi       : ";
+            cin >> lokasi;
+            cout << "Jenis Donor  : ";
+            cin >> jenis;
 
-    cout << "Program donor PD001 berhasil ditambahkan." << endl;
+            P = createElmProgram(idProgram, tanggal, lokasi, jenis);
+            addProgramFirst(L, P);
 
-    // ===============================
-    // Cari Program Donor
-    // ===============================
-    adrProgram cariProgram = searchProgram(L, "PD001");
+            cout << "Program donor berhasil ditambahkan." << endl;
+        }
 
-    if (cariProgram != nullptr) {
-        cout << "Program donor ditemukan: "
-             << cariProgram->info.IDprogram << endl;
-    } else {
-        cout << "Program donor tidak ditemukan." << endl;
-    }
+        else if (pilihan == 2) {
+            cout << "Masukkan ID Program: ";
+            cin >> idProgram;
 
-    // ===============================
-    // Tambah Pendonor ke Program
-    // ===============================
-    if (cariProgram != nullptr) {
-        D = createElmPendonor("Andi", "O", true);
-        addPendonorLast(cariProgram, D);
+            P = searchProgram(L, idProgram);
 
-        D = createElmPendonor("Budi", "A", false);
-        addPendonorLast(cariProgram, D);
+            if (P != nullptr) {
+                cout << "Nama Pendonor : ";
+                cin >> nama;
+                cout << "Gol Darah     : ";
+                cin >> gol;
+                cout << "Status Hadir (1=Hadir, 0=Tidak): ";
+                cin >> status;
 
-        cout << "Pendonor berhasil ditambahkan ke program PD001." << endl;
-    }
+                adrPendonor D = createElmPendonor(nama, gol, status);
+                addPendonorLast(P, D);
 
-    // ===============================
-    // Tampilkan Pendonor berdasarkan Program
-    // ===============================
-    cout << endl;
-    showPendonor(cariProgram);
+                cout << "Pendonor berhasil ditambahkan." << endl;
+            } else {
+                cout << "Program donor tidak ditemukan." << endl;
+            }
+        }
 
-    cout << endl << "=== PROGRAM SELESAI ===" << endl;
+        else if (pilihan == 3) {
+            cout << "Masukkan ID Program: ";
+            cin >> idProgram;
+
+            P = searchProgram(L, idProgram);
+            showPendonor(P);
+        }
+
+        else if (pilihan == 4) {
+            showAllPrograms(L);
+        }
+
+        else if (pilihan == 5) {
+            cout << "Masukkan ID Program: ";
+            cin >> idProgram;
+            P = searchProgram(L, idProgram);
+
+            if (P != nullptr) {
+                cout << "Nama Pendonor yang dihapus: ";
+                cin >> nama;
+                deletePendonor(P, nama);
+                cout << "Pendonor berhasil dihapus." << endl;
+            } else {
+                cout << "Program donor tidak ditemukan." << endl;
+            }
+        }
+
+        else if (pilihan == 6) {
+            cout << "Masukkan ID Program yang dihapus: ";
+            cin >> idProgram;
+            deleteProgram(L, idProgram);
+            cout << "Program donor berhasil dihapus." << endl;
+        }
+
+        else if (pilihan == 7) {
+            programTerbanyak(L);
+        }
+
+    } while (pilihan != 0);
+
+    cout << "Program selesai. Terima kasih." << endl;
 
     return 0;
 }
+
 
